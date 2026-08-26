@@ -1,9 +1,16 @@
 from fastapi import FastAPI
+<<<<<<< HEAD
 from fastapi.middleware.cors import CORSMiddleware
+=======
+from pydantic import BaseModel
+>>>>>>> main
 
 from card import Card
 from enemy import Enemy
 from player import Player
+
+class PlayCardRequest(BaseModel):
+    card_index: int
 
 app = FastAPI()
 
@@ -17,7 +24,11 @@ app.add_middleware(
 
 player = Player("Survivor", 100, 5)
 infected = Enemy("Infected", 100, 6)
-handgun = Card("Handgun", 8, 5)
+hand = [
+    Card("Handgun", 8, 2),
+    Card("Combat Knife", 4, 1),
+    Card("Shotgun", 15, 3)
+]
 
 def get_game_state():
     return {
@@ -31,11 +42,13 @@ def get_game_state():
             "health": infected.health,
             "attack": infected.attack
         },
-        "card": {
-            "name": handgun.name,
-            "damage": handgun.damage,
-            "cost": handgun.cost
+        "hand": [{
+            "name": card.name,
+            "damage": card.damage,
+            "cost": card.cost
         }
+        for card in hand
+        ]
     }
 
 @app.get("/api/game")
@@ -43,14 +56,16 @@ def get_game():
     return get_game_state()
 
 @app.post("/api/game/play-card")
-def play_card():
-    if player.energy >= handgun.cost:
-        player.energy -= handgun.cost
-        infected.health -= handgun.damage
+def play_card(request: PlayCardRequest):
+    card = hand[request.card_index]
+
+    if player.energy >= card.cost:
+        player.energy -= card.cost
+        infected.health -= card.damage
 
         return {
             "success": True,
-            "message": f"You played {handgun.name}!",
+            "message": f"You played {card.name}!",
             "game": get_game_state()
         }
     else:
