@@ -1,8 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from card import Card
+from enemy import Enemy
+from player import Player
+
 app = FastAPI()
 
+<<<<<<< HEAD
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -13,16 +18,50 @@ app.add_middleware(
 
 @app.get("/api/game")
 def  get_game():
+=======
+player = Player("Survivor", 100, 5)
+infected = Enemy("Infected", 100, 6)
+handgun = Card("Handgun", 8, 5)
+
+def get_game_state():
+>>>>>>> main
     return {
         "player": {
-            "name": "Survivor",
-            "health": 100,
-            "energy": 50
+            "name": player.name,
+            "health": player.health,
+            "energy": player.energy
         },
         "enemy": {
-            "name": "Infected",
-            "health": 100,
-            "attack": 6
+            "name": infected.name,
+            "health": infected.health,
+            "attack": infected.attack
+        },
+        "card": {
+            "name": handgun.name,
+            "damage": handgun.damage,
+            "cost": handgun.cost
         }
     }
+
+@app.get("/api/game")
+def  get_game():
+    return get_game_state()
+
+@app.post("/api/game/play-card")
+def play_card():
+    if player.energy >= handgun.cost:
+        player.energy -= handgun.cost
+        infected.health -= handgun.damage
+
+        return {
+            "success": True,
+            "message": f"You played {handgun.name}!",
+            "game": get_game_state()
+        }
+    else:
+        return {
+            "success": False,
+            "message": "Not enough energy to play the card.",
+            "game": get_game_state()
+        }
 
