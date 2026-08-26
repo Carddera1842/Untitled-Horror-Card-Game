@@ -1,4 +1,5 @@
 import {useEffect, useState} from 'react'
+import GameCard from './components/GameCard'
 
 interface GameState {
   player: {
@@ -20,6 +21,7 @@ interface GameState {
 
 function App() {
   const [game, setGame] = useState<GameState | null>(null)
+  const [message, setMessage] = useState("")
 
   useEffect(() => {
     fetch('http://localhost:8000/api/game')
@@ -39,7 +41,7 @@ function App() {
       .then((response) => response.json())
       .then((data) => {
         setGame(data.game)
-        console.log(data.message)
+        setMessage(data.message)
       })
       .catch((error) => console.error('Error playing card:', error))
 
@@ -61,13 +63,14 @@ function App() {
         <p>Attack: {game.enemy.attack}</p>
       </section>
 
-      <section>
-        <h2>{game.card.name}</h2>
-        <p>Damage: {game.card.damage}</p>
-        <p>Cost: {game.card.cost}</p>
+      {message && <p>{message}</p>}
 
-        <button onClick={playCard}>Play Card</button>
-      </section>
+        <GameCard
+          name={game.card.name}
+          damage={game.card.damage}
+          cost={game.card.cost}
+          onPlay={playCard}
+        />
     </main>
   )
 }
