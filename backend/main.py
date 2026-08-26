@@ -1,9 +1,6 @@
 from fastapi import FastAPI
-<<<<<<< HEAD
 from fastapi.middleware.cors import CORSMiddleware
-=======
 from pydantic import BaseModel
->>>>>>> main
 
 from card import Card
 from enemy import Enemy
@@ -68,8 +65,8 @@ def play_card(request: PlayCardRequest):
             "message": f"You played {card.name}!",
             "game": get_game_state()
         }
-    else:
+    return {
         "success": False,
         "message": "Not enough energy to play the card.",
         "game": get_game_state()
-
+    }

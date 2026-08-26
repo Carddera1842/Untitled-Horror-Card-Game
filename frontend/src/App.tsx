@@ -12,11 +12,11 @@ interface GameState {
     health: number
     attack: number
   }
-  card: {
+  hand: {
     name: string
     damage: number
     cost: number
-  }
+  }[]
 }
 
 function App() {
@@ -30,9 +30,13 @@ function App() {
       .catch((error) => console.error('Error fetching game state:', error))
   }, [])
 
-  const playCard = () => {
+  const playCard = (cardIndex: number) => {
     fetch('http://localhost:8000/api/game/play-card', {
-      method: 'POST'
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ card_index: cardIndex }),
       })
       .then((response) => response.json())
       .then((data) => {
@@ -65,13 +69,18 @@ function App() {
 
       {message && <p>{message}</p>}
 
-        <GameCard
-          name={game.card.name}
-          damage={game.card.damage}
-          cost={game.card.cost}
-          canPlay={game.player.energy >= game.card.cost}
-          onPlay={playCard}
-        />
+      <div className="hand">
+        {game.hand.map((card, index) => (
+          <GameCard
+            key={index}
+            name={card.name}
+            damage={card.damage}
+            cost={card.cost}
+            canPlay={game.player.energy >= card.cost}
+            onPlay={() => playCard(index)}
+          />
+        ))}
+      </div>
     </main>
   )
 }
