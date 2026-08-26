@@ -14,3 +14,13 @@ print(handgun.name)
 print(f"Damage: {handgun.damage}")
 print(f"Cost: {handgun.cost}")
 
+def play_card(card, enemy_health):
+    enemy_health = enemy_health - card.damage
+    return enemy_health
+
+enemy_health = play_card(handgun, enemy_health)
+
+print(f"You played {handgun.name}!")
+
+print(f"Enemy Health: {enemy_health}")
+
