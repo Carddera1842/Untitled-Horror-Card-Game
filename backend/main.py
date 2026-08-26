@@ -4,10 +4,8 @@ from player import Player
 
 print("Welcome to the horror card game!")
 
-
 player = Player("Survivor", 50, 0)
 infected = Enemy("Infected", 100, 6)
-
 
 print(f"Player: {player.name}")
 print(f"Player Health: {player.health}")
