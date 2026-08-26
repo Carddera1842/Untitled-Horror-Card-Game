@@ -18,8 +18,16 @@ hand = [
     Card("Shotgun", 15, 3)
 ]
 
+def get_game_status():
+    if infected.health <= 0:
+        return "You win!"
+    if player.health <= 0:
+        return "You lose!"
+    return "Game in progress."
+
 def get_game_state():
     return {
+        "status": get_game_status(),
         "player": {
             "name": player.name,
             "health": player.health,
@@ -45,11 +53,25 @@ def  get_game():
 
 @app.post("/api/game/play-card")
 def play_card(request: PlayCardRequest):
+    if get_game_status() != "Game in progress.":
+        return {
+            "success": False,
+            "message": "The game is over. Please start a new game.",
+            "game": get_game_state()
+        }
+
     card = hand[request.card_index]
 
     if player.energy >= card.cost:
         player.energy -= card.cost
         infected.health -= card.damage
+
+        if player.health <= 0:
+            return {
+                "success": True,
+                "message": f"You played {card.name} and lost the game!",
+                "game": get_game_state()
+            }
 
         return {
             "success": True,
@@ -65,10 +87,25 @@ def play_card(request: PlayCardRequest):
 
 @app.post("/api/game/end-turn")
 def end_turn():
-    player.energy = 5
+    if get_game_status() != "Game in progress.":
+        return {
+            "message": "The game is over. Please start a new game.",
+            "game": get_game_state()
+        }
+
     player.health -= infected.attack
+
+    if player.health <= 0:
+        return {
+            "message": f"{infected.name} attacked you for {infected.attack} damage! You lost the game!",
+            "game": get_game_state()
+        }
+
+    player.energy = 5
+    
 
     return {
         "message": f"{infected.name} attacked you for {infected.attack} damage!",
         "game": get_game_state()
     }
+
