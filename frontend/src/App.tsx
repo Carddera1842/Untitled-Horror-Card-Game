@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react'
 import GameCard from './components/GameCard'
 
 interface GameState {
+  status: "playing" | "won" | "lost"
   player: {
     name: string
     health: number
@@ -81,6 +82,9 @@ function App() {
 
       {message && <p>{message}</p>}
 
+      {game.status === "won" && (<h2>Victory! You defeated {game.enemy.name}!</h2>)}
+      {game.status === "lost" && (<h2>Game Over! {game.enemy.name} has defeated you!</h2>)}
+
       <div className="hand">
         {game.hand.map((card, index) => (
           <GameCard
@@ -88,13 +92,20 @@ function App() {
             name={card.name}
             damage={card.damage}
             cost={card.cost}
-            canPlay={game.player.energy >= card.cost}
+            canPlay={
+              game.status === "playing" && game.player.energy >= card.cost
+            }
             onPlay={() => playCard(index)}
           />
         ))}
       </div>
 
-      <button onClick={endTurn}>End Turn</button>
+      <button 
+        onClick={endTurn}
+        disabled={game.status !== "playing"}
+      >
+        End Turn
+      </button>
     </main>
   )
 }
