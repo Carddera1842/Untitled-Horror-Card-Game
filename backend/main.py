@@ -65,8 +65,20 @@ def play_card(request: PlayCardRequest):
             "message": f"You played {card.name}!",
             "game": get_game_state()
         }
+
     return {
         "success": False,
         "message": "Not enough energy to play the card.",
         "game": get_game_state()
     }
+
+@app.post("/api/game/end-turn")
+def end_turn():
+    player.energy = 5
+    player.health -= infected.attack
+
+    return {
+        "message": f"{infected.name} attacked you for {infected.attack} damage!",
+        "game": get_game_state()
+    }
+

@@ -47,6 +47,18 @@ function App() {
 
   }
 
+  const endTurn = () => {
+    fetch('http://localhost:8000/api/game/end-turn', {
+      method: 'POST',
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setGame(data.game)
+        setMessage(data.message)
+      })
+      .catch((error) => console.error('Error ending turn:', error))
+  }
+
   if (!game) {
     return <p>Loading game state...</p>
   }
@@ -81,6 +93,8 @@ function App() {
           />
         ))}
       </div>
+
+      <button onClick={endTurn}>End Turn</button>
     </main>
   )
 }
