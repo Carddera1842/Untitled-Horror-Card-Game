@@ -27,8 +27,18 @@ hand = [
     Card("Shotgun", 15, 3)
 ]
 
+def get_game_status():
+    if infected.health <= 0:
+        return "won"
+
+    if player.health <= 0:
+        return "lost"
+
+    return "playing"
+
 def get_game_state():
     return {
+        "status": get_game_status(),
         "player": {
             "name": player.name,
             "health": player.health,

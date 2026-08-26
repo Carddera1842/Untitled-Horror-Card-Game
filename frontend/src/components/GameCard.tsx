@@ -25,7 +25,7 @@ function GameCard({ name, damage, cost, canPlay, onPlay }: GameCardProps) {
         onClick={onPlay}
         disabled={!canPlay}
       >
-        Play Card
+        {canPlay ? 'Play Card' : 'Not Enough Energy'}
       </button>
     </div>
   )
