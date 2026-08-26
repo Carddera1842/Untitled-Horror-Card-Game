@@ -29,10 +29,6 @@ function App() {
       .then((data) => setGame(data))
       .catch((error) => console.error('Error fetching game state:', error))
   }, [])
-  
-  if (!game) {
-    return <p>Loading game state...</p>
-  }
 
   const playCard = () => {
     fetch('http://localhost:8000/api/game/play-card', {
@@ -45,6 +41,10 @@ function App() {
       })
       .catch((error) => console.error('Error playing card:', error))
 
+  }
+
+  if (!game) {
+    return <p>Loading game state...</p>
   }
 
   return (
@@ -69,6 +69,7 @@ function App() {
           name={game.card.name}
           damage={game.card.damage}
           cost={game.card.cost}
+          canPlay={game.player.energy >= game.card.cost}
           onPlay={playCard}
         />
     </main>

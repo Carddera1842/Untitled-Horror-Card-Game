@@ -1,11 +1,14 @@
+import './GameCard.css'
+
 interface GameCardProps {
   name: string
   damage: number
   cost: number
+  canPlay: boolean
   onPlay: () => void
 }
 
-function GameCard({ name, damage, cost, onPlay }: GameCardProps) {
+function GameCard({ name, damage, cost, canPlay, onPlay }: GameCardProps) {
   return (
     <div className="game-card">
       <h3>{name}</h3>
@@ -18,7 +21,12 @@ function GameCard({ name, damage, cost, onPlay }: GameCardProps) {
         <p>Cost: {cost}</p>
       </div>
       
-      <button onClick={onPlay}>Play Card</button>
+      <button 
+        onClick={onPlay}
+        disabled={!canPlay}
+      >
+        Play Card
+      </button>
     </div>
   )
 }

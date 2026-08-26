@@ -39,7 +39,7 @@ def get_game_state():
     }
 
 @app.get("/api/game")
-def  get_game():
+def get_game():
     return get_game_state()
 
 @app.post("/api/game/play-card")
@@ -54,9 +54,7 @@ def play_card():
             "game": get_game_state()
         }
     else:
-        return {
-            "success": False,
-            "message": "Not enough energy to play the card.",
-            "game": get_game_state()
-        }
+        "success": False,
+        "message": "Not enough energy to play the card.",
+        "game": get_game_state()
 
