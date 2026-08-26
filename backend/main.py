@@ -7,24 +7,19 @@ from player import Player
 
 app = FastAPI()
 
-<<<<<<< HEAD
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-@app.get("/api/game")
-def  get_game():
-=======
 player = Player("Survivor", 100, 5)
 infected = Enemy("Infected", 100, 6)
 handgun = Card("Handgun", 8, 5)
 
 def get_game_state():
->>>>>>> main
     return {
         "player": {
             "name": player.name,

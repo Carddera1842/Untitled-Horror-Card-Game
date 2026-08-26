@@ -11,6 +11,11 @@ interface GameState {
     health: number
     attack: number
   }
+  card: {
+    name: string
+    damage: number
+    cost: number
+  }
 }
 
 function App() {
@@ -27,6 +32,19 @@ function App() {
     return <p>Loading game state...</p>
   }
 
+  const playCard = () => {
+    fetch('http://localhost:8000/api/game/play-card', {
+      method: 'POST'
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        setGame(data.game)
+        console.log(data.message)
+      })
+      .catch((error) => console.error('Error playing card:', error))
+
+  }
+
   return (
     <main>
       <h1>Untitled Horror Card Game</h1>
@@ -41,6 +59,14 @@ function App() {
         <h2>{game.enemy.name}</h2>
         <p>Health: {game.enemy.health}</p>
         <p>Attack: {game.enemy.attack}</p>
+      </section>
+
+      <section>
+        <h2>{game.card.name}</h2>
+        <p>Damage: {game.card.damage}</p>
+        <p>Cost: {game.card.cost}</p>
+
+        <button onClick={playCard}>Play Card</button>
       </section>
     </main>
   )
