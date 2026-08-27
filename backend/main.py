@@ -4,6 +4,10 @@ from pydantic import BaseModel
 from card import Card
 from enemy import Enemy
 from player import Player
+from database import Base, engine, SessionLocal
+from models import CardModel
+
+Base.metadata.create_all(bind=engine)
 
 class PlayCardRequest(BaseModel):
     card_index: int
@@ -12,11 +16,25 @@ app = FastAPI()
 
 player = Player("Survivor", 100, 5)
 infected = Enemy("Infected", 100, 6)
-hand = [
-    Card("Handgun", 8, 2),
-    Card("Combat Knife", 4, 1),
-    Card("Shotgun", 15, 3)
-]
+
+def load_cards():
+    db = SessionLocal()
+
+    try:
+        card_records = db.query(CardModel).all()
+
+        return [
+            Card(
+                card.name,
+                card.damage,
+                card.cost
+            )
+            for card in card_records
+        ]
+    finally:
+        db.close()
+
+hand = load_cards()
 
 def get_game_status():
     if infected.health <= 0:
