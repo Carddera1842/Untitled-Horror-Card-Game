@@ -42,18 +42,14 @@ def load_cards():
     finally:
         db.close()
 
-
 hand = load_cards()
 
 def load_enemies_by_type(enemy_type):
     db = SessionLocal()
 
     try:
-        enemy_records = (
-            db.query(EnemyModel)
-            .filter(EnemyModel.enemy_type == enemy_type)
-            .all()
-        )
+        enemy_records = db.query(EnemyModel).filter(EnemyModel.enemy_type == enemy_type).all()
+
 
         return [
             Enemy(
@@ -97,13 +93,12 @@ def get_enemy_for_encounter():
         source_enemy.attack
     )
 
-
 current_enemy = get_enemy_for_encounter()
 
 def get_game_status():
     if current_enemy.health <= 0:
         return "won"
-        
+
     if player.health <= 0:
         return "lost"
 
@@ -193,7 +188,7 @@ def end_turn():
 
     if player.health <= 0:
         return {
-            "message": f"{current_enemy.name} attacked you for {current_enemy.attack} damage! You lost the game!",
+            "message": f"{current_enemy.name} attacked you for {current_enemy.attack} damage! You lost the battle!",
             "game": get_game_state()
         }
 
@@ -222,7 +217,6 @@ def next_encounter():
         return {
             "success": True,
             "message": "You completed the run!",
-            "game": get_game_state()
         }
 
     current_enemy = get_enemy_for_encounter()
