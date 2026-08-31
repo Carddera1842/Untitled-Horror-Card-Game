@@ -26,7 +26,6 @@ cards = [
 
 db.add_all(cards)
 db.commit()
-
 db.close()
 
 print("Cards added successfully!")
